@@ -88,6 +88,10 @@
 		.lightbox .lb-next{right:1rem}
 		.lightbox .lb-close{top:1rem;right:1.5rem;font-size:2rem;transform:none}
 
+		/* Pending banner */
+		.pending-section {height:15vh;background-color:#bab9b6;overflow:hidden;display:flex;align-items:center;position:relative}
+		.scroll-text {white-space:nowrap;font-size:4.5rem;font-weight:bold;color:#fcfcfc;pointer-events:none;transform:translateX(0);transition:transform 0s}
+
 		/* Map */
 		#map {padding:2rem 0;text-align:center}
 
@@ -135,6 +139,27 @@
 					<div class="hero-title">54468 Flamingo Drive<br>Shelby Township</div>
 			</div>
 	</section>
+
+	<!-- Pending banner -->
+	<section class="pending-section">
+		<div class="scroll-text" id="scrollText">
+			PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp;
+			PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp;
+			PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp; PENDING &nbsp;
+		</div>
+	</section>
+
+	<script>
+	(function () {
+		var scrollText = document.getElementById('scrollText');
+		var baseOffset = -2000;
+		var scrollFactor = 2;
+		window.addEventListener('scroll', function () {
+			var offsetX = baseOffset + window.scrollY * scrollFactor;
+			scrollText.style.transform = 'translateX(' + offsetX + 'px)';
+		});
+	})();
+	</script>
 
 	<!-- Details -->
 	<section class="details-section">
