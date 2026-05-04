@@ -379,6 +379,16 @@
 	(function () {
 		var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVB4Bu2YXiCDKd0danyLegQFIVeRvPQS6gOrtPhXM2_dGoT4qRuX3ODGodTuN9HmyF/exec";
 
+		function sha256(str) {
+			var input = str.trim().toLowerCase();
+			return crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
+				.then(function (buf) {
+					return Array.from(new Uint8Array(buf)).map(function (b) {
+						return b.toString(16).padStart(2, '0');
+					}).join('');
+				});
+		}
+
 		document.getElementById('property').value = document.title;
 
 		document.querySelector('.contact-form').addEventListener('submit', function (e) {
@@ -408,7 +418,22 @@
 				body: formBody
 			})
 			.then(function () {
-				ttq.track('SubmitForm');
+				return Promise.all([sha256(payload.email), sha256(payload.phone)]);
+			})
+			.then(function (hashed) {
+				ttq.identify({
+					email:        hashed[0],
+					phone_number: hashed[1]
+				});
+				ttq.track('Lead', {
+					contents: [{
+						content_id:   '1031-N-Sherman-Dr-A',
+						content_type: 'product',
+						content_name: document.title
+					}],
+					value:    0, // update to listing price
+					currency: 'USD'
+				});
 				msg.style.color = '#2a7a2a';
 				msg.textContent = "Thank you! We'll be in touch.";
 				msg.style.display = 'block';
